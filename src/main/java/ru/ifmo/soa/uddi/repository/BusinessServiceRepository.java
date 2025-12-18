@@ -4,23 +4,33 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import ru.ifmo.soa.uddi.model.entity.BusinessService;
+import ru.ifmo.soa.uddi.model.entity.BusinessServiceEntity;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface BusinessServiceRepository extends JpaRepository<BusinessService, String> {
+public interface BusinessServiceRepository extends JpaRepository<BusinessServiceEntity, String> {
 
-  Optional<BusinessService> findByServiceKey(String serviceKey);
+  Optional<BusinessServiceEntity> findByServiceKey(String serviceKey);
 
-  List<BusinessService> findByBusinessEntity_BusinessKey(String businessKey);
+  List<BusinessServiceEntity> findByBusinessEntity_BusinessKey(String businessKey);
 
-  @Query("SELECT s FROM BusinessService s WHERE s.name LIKE %:name%")
-  List<BusinessService> findByNameLike(@Param("name") String name);
+  List<BusinessServiceEntity> findByBusinessEntity_Operator(String operator);
 
-  @Query("SELECT s FROM BusinessService s " +
-    "JOIN s.categoryBags cb " +
-    "WHERE cb.tModelKey = :tModelKey AND cb.keyValue = :keyValue")
-  List<BusinessService> findByCategory(@Param("tModelKey") String tModelKey, @Param("keyValue") String keyValue);
+  List<BusinessServiceEntity> findByBusinessEntity_BusinessKeyIn(Collection<String> businessKeys);
+
+  @Query("SELECT s FROM BusinessServiceEntity s WHERE s.name LIKE %:name%")
+  List<BusinessServiceEntity> findByNameLike(@Param("name") String name);
+
+  @Query("SELECT s FROM BusinessServiceEntity s " +
+    "WHERE s.serviceKey IN (" +
+    "SELECT cb.entityKey FROM CategoryBagEntity cb " +
+    "WHERE cb.entityType = ru.ifmo.soa.uddi.model.entity.EntityType.SERVICE " +
+    "AND cb.tModelKey = :tModelKey " +
+    "AND cb.keyValue = :keyValue" +
+    ")"
+  )
+  List<BusinessServiceEntity> findByCategory(@Param("tModelKey") String tModelKey, @Param("keyValue") String keyValue);
 }

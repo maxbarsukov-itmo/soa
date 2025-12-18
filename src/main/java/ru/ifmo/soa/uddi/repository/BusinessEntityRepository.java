@@ -4,26 +4,38 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import ru.ifmo.soa.uddi.model.entity.BusinessEntity;
+import ru.ifmo.soa.uddi.model.entity.BusinessEntityEntity;
 
 import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface BusinessEntityRepository extends JpaRepository<BusinessEntity, String> {
+public interface BusinessEntityRepository extends JpaRepository<BusinessEntityEntity, String> {
 
-  Optional<BusinessEntity> findByBusinessKey(String businessKey);
+  Optional<BusinessEntityEntity> findByBusinessKey(String businessKey);
 
-  @Query("SELECT b FROM BusinessEntity b WHERE b.name LIKE %:name%")
-  List<BusinessEntity> findByNameLike(@Param("name") String name);
+  List<BusinessEntityEntity> findByOperator(String operator);
 
-  @Query("SELECT b FROM BusinessEntity b " +
-    "JOIN b.categoryBags cb " +
-    "WHERE cb.tModelKey = :tModelKey AND cb.keyValue = :keyValue")
-  List<BusinessEntity> findByCategory(@Param("tModelKey") String tModelKey, @Param("keyValue") String keyValue);
+  @Query("SELECT b FROM BusinessEntityEntity b WHERE b.name LIKE %:name%")
+  List<BusinessEntityEntity> findByNameLike(@Param("name") String name);
 
-  @Query("SELECT b FROM BusinessEntity b " +
-    "JOIN b.identifierBags ib " +
-    "WHERE ib.tModelKey = :tModelKey AND ib.keyValue = :keyValue")
-  List<BusinessEntity> findByIdentifier(@Param("tModelKey") String tModelKey, @Param("keyValue") String keyValue);
+  @Query("SELECT b FROM BusinessEntityEntity b " +
+    "WHERE b.businessKey IN (" +
+    "SELECT cb.entityKey FROM CategoryBagEntity cb " +
+    "WHERE cb.entityType = ru.ifmo.soa.uddi.model.entity.EntityType.BUSINESS " +
+    "AND cb.tModelKey = :tModelKey " +
+    "AND cb.keyValue = :keyValue" +
+    ")"
+  )
+  List<BusinessEntityEntity> findByCategory(@Param("tModelKey") String tModelKey, @Param("keyValue") String keyValue);
+
+  @Query("SELECT b FROM BusinessEntityEntity b " +
+    "WHERE b.businessKey IN (" +
+    "SELECT cb.entityKey FROM IdentifierBagEntity cb " +
+    "WHERE cb.entityType = ru.ifmo.soa.uddi.model.entity.EntityType.BUSINESS " +
+    "AND cb.tModelKey = :tModelKey " +
+    "AND cb.keyValue = :keyValue" +
+    ")"
+  )
+  List<BusinessEntityEntity> findByIdentifier(@Param("tModelKey") String tModelKey, @Param("keyValue") String keyValue);
 }
