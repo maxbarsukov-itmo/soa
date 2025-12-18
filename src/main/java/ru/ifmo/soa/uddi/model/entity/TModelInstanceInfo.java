@@ -2,12 +2,17 @@ package ru.ifmo.soa.uddi.model.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Getter
 @Setter
-@Table(name = "tmodel_instance_info")
+@NoArgsConstructor
+@Table(name = "tmodel_instance_info", indexes = {
+  @Index(name = "idx_tmodelinst_binding_key", columnList = "binding_key"),
+  @Index(name = "idx_tmodelinst_tmodel_key", columnList = "tmodel_key")
+})
 public class TModelInstanceInfo {
   @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;

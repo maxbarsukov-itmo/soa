@@ -12,7 +12,10 @@ import java.util.UUID;
 @Entity
 @Getter
 @Setter
-@Table(name = "tmodel")
+@Table(name = "tmodel", indexes = {
+  @Index(name = "idx_tmodel_name", columnList = "name"),
+  @Index(name = "idx_tmodel_operator", columnList = "operator")
+})
 public class TModel {
   @Id
   @Column(name = "tmodel_key", nullable = false, unique = true)

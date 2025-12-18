@@ -2,18 +2,24 @@ package ru.ifmo.soa.uddi.model.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Getter
 @Setter
-@Table(name = "category_bag")
+@NoArgsConstructor
+@Table(name = "category_bag", indexes = {
+  @Index(name = "idx_category_entity", columnList = "entity_type, entity_key"),
+  @Index(name = "idx_category_tmodel_key_value", columnList = "tmodel_key, key_value")
+})
 public class CategoryBag {
   @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(name = "entity_type", nullable = false) // 'business', 'service', 'binding', 'tmodel'
-  private String entityType;
+  @Enumerated(EnumType.STRING)
+  @Column(name = "entity_type", nullable = false)
+  private EntityType entityType;
 
   @Column(name = "entity_key", nullable = false)
   private String entityKey;

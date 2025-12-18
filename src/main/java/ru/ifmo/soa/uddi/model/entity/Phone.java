@@ -2,12 +2,16 @@ package ru.ifmo.soa.uddi.model.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Getter
 @Setter
-@Table(name = "phone")
+@NoArgsConstructor
+@Table(name = "phone", indexes = {
+  @Index(name = "idx_phone_contact", columnList = "contact_id")
+})
 public class Phone {
   @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;

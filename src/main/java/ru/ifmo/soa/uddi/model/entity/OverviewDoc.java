@@ -2,12 +2,16 @@ package ru.ifmo.soa.uddi.model.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Getter
 @Setter
-@Table(name = "overview_doc")
+@NoArgsConstructor
+@Table(name = "overview_doc", indexes = {
+  @Index(name = "idx_overview_tmodel_key", columnList = "tmodel_key")
+})
 public class OverviewDoc {
   @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;

@@ -12,7 +12,10 @@ import java.util.UUID;
 @Entity
 @Getter
 @Setter
-@Table(name = "business_entity")
+@Table(name = "business_entity", indexes = {
+  @Index(name = "idx_business_name", columnList = "name"),
+  @Index(name = "idx_business_operator", columnList = "operator")
+})
 public class BusinessEntity {
   @Id
   @Column(name = "business_key", nullable = false, unique = true)

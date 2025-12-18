@@ -12,7 +12,10 @@ import java.util.UUID;
 @Entity
 @Getter
 @Setter
-@Table(name = "binding_template")
+@Table(name = "binding_template", indexes = {
+  @Index(name = "idx_binding_service_key", columnList = "service_key"),
+  @Index(name = "idx_binding_access_point", columnList = "access_point")
+})
 public class BindingTemplate {
   @Id
   @Column(name = "binding_key", nullable = false, unique = true)

@@ -2,6 +2,7 @@ package ru.ifmo.soa.uddi.model.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
@@ -10,7 +11,10 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@Table(name = "contact")
+@NoArgsConstructor
+@Table(name = "contact", indexes = {
+  @Index(name = "idx_contact_business_key", columnList = "business_key")
+})
 public class Contact {
   @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
