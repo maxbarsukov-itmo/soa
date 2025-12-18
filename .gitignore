@@ -136,6 +136,24 @@ buildNumber.properties
 .mvn/timing.properties
 .mvn/wrapper/maven-wrapper.jar
 
+### Gradle ###
+
+.gradle
+**/build/
+!**/src/**/build/
+
+# Ignore Gradle GUI config
+gradle-app.setting
+
+# Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
+!gradle-wrapper.jar
+
+# Avoid ignore Gradle wrappper properties
+!gradle-wrapper.properties
+
+# Cache of project
+.gradletasknamecache
+
 ### Windows ###
 # Windows thumbnail cache files
 Thumbs.db
@@ -194,7 +212,6 @@ target
 dependency-reduced-pom.xml
 *.sublime-*
 /scratch
-.gradle
 README.html
 .exercism
 
