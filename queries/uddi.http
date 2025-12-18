@@ -1,0 +1,196 @@
+### [0] Конфигурация
+@host = http://localhost:8080
+@contentType = text/xml; charset=utf-8
+@ns = urn:uddi-org:api_v3
+
+### [1] Получить auth token
+#@name = getAuthToken
+POST {{host}}/uddi
+Content-Type: {{contentType}}
+
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+  <soapenv:Body>
+    <get_authToken xmlns="{{ns}}" userID="testuser" cred="ignored"/>
+  </soapenv:Body>
+</soapenv:Envelope>
+
+> {% client.global.set("authToken", response.body.xpath("//authInfo/text()").string()); %}
+
+### [2] Создать TModel (для категоризации)
+# @name = saveTModel
+POST {{host}}/uddi
+Content-Type: {{contentType}}
+
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+  <soapenv:Body>
+    <save_tModel xmlns="{{ns}}">
+      <authInfo>{{authToken}}</authInfo>
+      <tModel>
+        <name>Test Classification TModel</name>
+        <overviewDoc>
+          <overviewURL>https://example.com/tmodel</overviewURL>
+        </overviewDoc>
+      </tModel>
+    </save_tModel>
+  </soapenv:Body>
+</soapenv:Envelope>
+
+> {% client.global.set("tModelKey", response.body.xpath("//tModelKey/text()").string()); %}
+
+### [3] Создать BusinessEntity
+# @name = saveBusiness
+POST {{host}}/uddi
+Content-Type: {{contentType}}
+
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+  <soapenv:Body>
+    <save_business xmlns="{{ns}}">
+      <authInfo>{{authToken}}</authInfo>
+      <businessEntity>
+        <name>Test Business</name>
+        <description>Business for UDDI testing</description>
+        <discoveryURLs>
+          <discoveryURL useType="home">https://testbusiness.example.com</discoveryURL>
+        </discoveryURLs>
+        <categoryBag>
+          <keyedReference tModelKey="{{tModelKey}}" keyValue="retail"/>
+        </categoryBag>
+        <contacts>
+          <contact useType="admin">
+            <personName>Test Admin</personName>
+            <phone>+71234567890</phone>
+            <email>admin@testbusiness.example.com</email>
+          </contact>
+        </contacts>
+      </businessEntity>
+    </save_business>
+  </soapenv:Body>
+</soapenv:Envelope>
+
+> {% client.global.set("businessKey", response.body.xpath("//businessKey/text()").string()); %}
+
+### [4] Создать BusinessService
+# @name = saveService
+POST {{host}}/uddi
+Content-Type: {{contentType}}
+
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+  <soapenv:Body>
+    <save_service xmlns="{{ns}}">
+      <authInfo>{{authToken}}</authInfo>
+      <businessService businessKey="{{businessKey}}">
+        <name>Test API Service</name>
+        <categoryBag>
+          <keyedReference tModelKey="{{tModelKey}}" keyValue="api"/>
+        </categoryBag>
+      </businessService>
+    </save_service>
+  </soapenv:Body>
+</soapenv:Envelope>
+
+> {% client.global.set("serviceKey", response.body.xpath("//serviceKey/text()").string()); %}
+
+### [5] Создать BindingTemplate
+# @name = saveBinding
+POST {{host}}/uddi
+Content-Type: {{contentType}}
+
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+  <soapenv:Body>
+    <save_binding xmlns="{{ns}}">
+      <authInfo>{{authToken}}</authInfo>
+      <bindingTemplate serviceKey="{{serviceKey}}">
+        <accessPoint>https://api.testbusiness.example.com/v1</accessPoint>
+        <tModelInstanceDetails>
+          <tModelInstanceInfo tModelKey="uddi:uddi-org:protocol:soap12">
+            <instanceDetails>
+              <instanceParms>http://testbusiness.example.com/ns</instanceParms>
+            </instanceDetails>
+          </tModelInstanceInfo>
+        </tModelInstanceDetails>
+      </bindingTemplate>
+    </save_binding>
+  </soapenv:Body>
+</soapenv:Envelope>
+
+> {% client.global.set("bindingKey", response.body.xpath("//bindingKey/text()").string()); %}
+
+### [6] Проверить: get_registeredInfo
+# @name = getRegisteredInfo
+POST {{host}}/uddi
+Content-Type: {{contentType}}
+
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+  <soapenv:Body>
+    <get_registeredInfo xmlns="{{ns}}" infoSelection="all"/>
+  </soapenv:Body>
+</soapenv:Envelope>
+
+### [7] Проверить: get_businessDetail
+# @name = getBusinessDetail
+POST {{host}}/uddi
+Content-Type: {{contentType}}
+
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+  <soapenv:Body>
+    <get_businessDetail xmlns="{{ns}}">
+      <businessKey>{{businessKey}}</businessKey>
+    </get_businessDetail>
+  </soapenv:Body>
+</soapenv:Envelope>
+
+### [8] Удалить Binding
+# @name = deleteBinding
+POST {{host}}/uddi
+Content-Type: {{contentType}}
+
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+  <soapenv:Body>
+    <delete_binding xmlns="{{ns}}">
+      <authInfo>{{authToken}}</authInfo>
+      <bindingKey>{{bindingKey}}</bindingKey>
+    </delete_binding>
+  </soapenv:Body>
+</soapenv:Envelope>
+
+### [9] Удалить Service
+# @name = deleteService
+POST {{host}}/uddi
+Content-Type: {{contentType}}
+
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+  <soapenv:Body>
+    <delete_service xmlns="{{ns}}">
+      <authInfo>{{authToken}}</authInfo>
+      <serviceKey>{{serviceKey}}</serviceKey>
+    </delete_service>
+  </soapenv:Body>
+</soapenv:Envelope>
+
+### [10] Удалить Business
+# @name = deleteBusiness
+POST {{host}}/uddi
+Content-Type: {{contentType}}
+
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+  <soapenv:Body>
+    <delete_business xmlns="{{ns}}">
+      <authInfo>{{authToken}}</authInfo>
+      <businessKey>{{businessKey}}</businessKey>
+    </delete_business>
+  </soapenv:Body>
+</soapenv:Envelope>
+
+### [11] Удалить TModel
+# @name = deleteTModel
+POST {{host}}/uddi
+Content-Type: {{contentType}}
+
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+  <soapenv:Body>
+    <delete_tModel xmlns="{{ns}}">
+      <authInfo>{{authToken}}</authInfo>
+      <tModelKey>{{tModelKey}}</tModelKey>
+    </delete_tModel>
+  </soapenv:Body>
+</soapenv:Envelope>
