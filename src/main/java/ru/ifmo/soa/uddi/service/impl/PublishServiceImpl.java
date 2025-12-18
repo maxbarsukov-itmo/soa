@@ -501,16 +501,18 @@ public class PublishServiceImpl implements PublishService {
 
   private void updateCategoryBags(EntityType type, String entityKey, CategoryBag uddiBag) {
     categoryRepo.deleteAll(categoryRepo.findByEntityTypeAndEntityKey(type, entityKey));
-    for (JAXBElement<?> element : uddiBag.getContent()) {
-      if (element.getDeclaredType() == KeyedReference.class) {
-        KeyedReference ref = (KeyedReference) element.getValue();
-        CategoryBagEntity bag = new CategoryBagEntity();
-        bag.setEntityType(type);
-        bag.setEntityKey(entityKey);
-        bag.setTModelKey(ref.getTModelKey());
-        bag.setKeyName(ref.getKeyName());
-        bag.setKeyValue(ref.getKeyValue());
-        categoryRepo.save(bag);
+    if (uddiBag != null && uddiBag.getContent() != null) {
+      for (JAXBElement<?> element : uddiBag.getContent()) {
+        if (element.getDeclaredType() == KeyedReference.class) {
+          KeyedReference ref = (KeyedReference) element.getValue();
+          CategoryBagEntity bag = new CategoryBagEntity();
+          bag.setEntityType(type);
+          bag.setEntityKey(entityKey);
+          bag.setTModelKey(ref.getTModelKey());
+          bag.setKeyName(ref.getKeyName());
+          bag.setKeyValue(ref.getKeyValue());
+          categoryRepo.save(bag);
+        }
       }
     }
   }
