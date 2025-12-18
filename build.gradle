@@ -1,0 +1,69 @@
+plugins {
+  id 'java'
+  id 'org.springframework.boot' version '3.4.0'
+  id 'io.spring.dependency-management' version '1.1.7'
+  id 'org.unbroken-dome.xjc' version "2.0.0"
+}
+
+group = 'ru.ifmo.soa'
+version = '0.1.0-SNAPSHOT'
+
+java {
+  sourceCompatibility = JavaVersion.VERSION_17
+  targetCompatibility = JavaVersion.VERSION_17
+}
+
+tasks.withType(JavaCompile).configureEach {
+  options.encoding = 'UTF-8'
+  options.release = 17
+}
+
+configurations {
+  compileOnly {
+    extendsFrom annotationProcessor
+  }
+}
+
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+  implementation 'org.springframework.boot:spring-boot-starter-web-services'
+  implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+  implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+  implementation 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.2'
+  runtimeOnly 'org.glassfish.jaxb:jaxb-runtime:4.0.5'
+
+  runtimeOnly 'org.postgresql:postgresql'
+
+  compileOnly 'org.projectlombok:lombok'
+  annotationProcessor 'org.projectlombok:lombok'
+
+  implementation 'org.apache.commons:commons-lang3:3.17.0'
+
+  testImplementation 'org.springframework.boot:spring-boot-starter-test'
+  testImplementation 'org.springframework.ws:spring-ws-test'
+}
+
+xjc {
+  xjcVersion = '3.0'
+  extension = true
+  encoding = 'UTF-8'
+}
+
+sourceSets {
+  main {
+    xjcSchema {
+      setIncludes(['uddi_v3.xsd'])
+    }
+
+    xjcTargetPackage = 'org.uddi.api_v3'
+    xjcExtraArgs.addAll '-XautoNameResolution'
+  }
+}
+
+tasks.named('test') {
+  useJUnitPlatform()
+}

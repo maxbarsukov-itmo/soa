@@ -1,0 +1,27 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    database: postgresql
+    hibernate:
+      ddl-auto: create-drop  # Для демо. В проде: validate или migrate
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.H2Dialect
+
+# Spring Web Services
+web-services:
+  path: /uddi
+  wsdl-locations:
+    - classpath:/wsdl/inquiry_v3.wsdl
+    - classpath:/wsdl/publication_v3.wsdl
+
+logging:
+  level:
+    org.springframework.ws: DEBUG
+    com.example.uddi: DEBUG
