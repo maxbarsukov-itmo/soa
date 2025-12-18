@@ -13,7 +13,7 @@ import lombok.Setter;
   @Index(name = "idx_identifier_entity", columnList = "entity_type, entity_key"),
   @Index(name = "idx_identifier_tmodel_key_value", columnList = "tmodel_key, key_value")
 })
-public class IdentifierBag {
+public class IdentifierBagEntity {
   @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 

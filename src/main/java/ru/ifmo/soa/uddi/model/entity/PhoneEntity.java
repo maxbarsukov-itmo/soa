@@ -12,10 +12,10 @@ import lombok.Setter;
 @Table(name = "phone", indexes = {
   @Index(name = "idx_phone_contact", columnList = "contact_id")
 })
-public class Phone {
+public class PhoneEntity {
   @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
-  @ManyToOne private Contact contact;
+  @ManyToOne private ContactEntity contact;
   @Column(name = "use_type") private String useType;
   @Column(name = "phone_number", nullable = false) private String phoneNumber;
 }

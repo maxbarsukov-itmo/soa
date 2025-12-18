@@ -16,14 +16,14 @@ import java.util.UUID;
   @Index(name = "idx_service_name", columnList = "name"),
   @Index(name = "idx_service_business_key", columnList = "business_key")
 })
-public class BusinessService {
+public class BusinessServiceEntity {
   @Id
   @Column(name = "service_key", nullable = false, unique = true)
   private String serviceKey;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "business_key", nullable = false)
-  private BusinessEntity businessEntity;
+  private BusinessEntityEntity businessEntity;
 
   @Column(name = "name", nullable = false, length = 255)
   private String name;
@@ -37,13 +37,13 @@ public class BusinessService {
   @Column(name = "updated_at")
   private LocalDateTime updatedAt;
 
-  @OneToMany(mappedBy = "service", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<CategoryBag> categoryBags = new ArrayList<>();
+  @Transient
+  private List<CategoryBagEntity> categoryBags = new ArrayList<>();
 
-  @OneToMany(mappedBy = "service", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<BindingTemplate> bindings = new ArrayList<>();
+  @Transient
+  private List<BindingTemplateEntity> bindings = new ArrayList<>();
 
-  public BusinessService() {
+  public BusinessServiceEntity() {
     this.serviceKey = "uuid:" + UUID.randomUUID();
     this.createdAt = LocalDateTime.now();
   }

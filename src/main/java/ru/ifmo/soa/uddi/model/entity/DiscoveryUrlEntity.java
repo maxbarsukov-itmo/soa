@@ -13,13 +13,13 @@ import lombok.Setter;
   @Index(name = "idx_discovery_business_key", columnList = "business_key"),
   @Index(name = "idx_discovery_url", columnList = "url")
 })
-public class DiscoveryUrl {
+public class DiscoveryUrlEntity {
   @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
   @ManyToOne
   @JoinColumn(name = "business_key", nullable = false)
-  private BusinessEntity businessEntity;
+  private BusinessEntityEntity businessEntity;
 
   @Column(name = "use_type", length = 255)
   private String useType;

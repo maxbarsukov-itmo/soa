@@ -13,7 +13,7 @@ import lombok.Setter;
   @Index(name = "idx_category_entity", columnList = "entity_type, entity_key"),
   @Index(name = "idx_category_tmodel_key_value", columnList = "tmodel_key, key_value")
 })
-public class CategoryBag {
+public class CategoryBagEntity {
   @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 

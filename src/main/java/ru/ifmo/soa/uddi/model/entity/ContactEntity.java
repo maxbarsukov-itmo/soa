@@ -15,13 +15,13 @@ import java.util.List;
 @Table(name = "contact", indexes = {
   @Index(name = "idx_contact_business_key", columnList = "business_key")
 })
-public class Contact {
+public class ContactEntity {
   @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
   @ManyToOne
   @JoinColumn(name = "business_key", nullable = false)
-  private BusinessEntity businessEntity;
+  private BusinessEntityEntity businessEntity;
 
   @Column(name = "use_type", length = 255)
   private String useType;
@@ -30,8 +30,8 @@ public class Contact {
   private String personName;
 
   @OneToMany(mappedBy = "contact", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<Phone> phones = new ArrayList<>();
+  private List<PhoneEntity> phones = new ArrayList<>();
 
   @OneToMany(mappedBy = "contact", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<Email> emails = new ArrayList<>();
+  private List<EmailEntity> emails = new ArrayList<>();
 }

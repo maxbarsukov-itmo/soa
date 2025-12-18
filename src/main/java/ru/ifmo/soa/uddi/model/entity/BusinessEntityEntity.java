@@ -12,14 +12,14 @@ import java.util.UUID;
 @Entity
 @Getter
 @Setter
-@Table(name = "tmodel", indexes = {
-  @Index(name = "idx_tmodel_name", columnList = "name"),
-  @Index(name = "idx_tmodel_operator", columnList = "operator")
+@Table(name = "business_entity", indexes = {
+  @Index(name = "idx_business_name", columnList = "name"),
+  @Index(name = "idx_business_operator", columnList = "operator")
 })
-public class TModel {
+public class BusinessEntityEntity {
   @Id
-  @Column(name = "tmodel_key", nullable = false, unique = true)
-  private String tModelKey;
+  @Column(name = "business_key", nullable = false, unique = true)
+  private String businessKey;
 
   @Column(name = "name", nullable = false, length = 255)
   private String name;
@@ -36,14 +36,23 @@ public class TModel {
   @Column(name = "updated_at")
   private LocalDateTime updatedAt;
 
-  @OneToMany(mappedBy = "tModel", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<CategoryBag> categoryBags = new ArrayList<>();
+  @Transient
+  private List<DiscoveryUrlEntity> discoveryUrls = new ArrayList<>();
 
-  @OneToMany(mappedBy = "tModel", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<OverviewDoc> overviewDocs = new ArrayList<>();
+  @Transient
+  private List<ContactEntity> contacts = new ArrayList<>();
 
-  public TModel() {
-    this.tModelKey = "uuid:" + UUID.randomUUID();
+  @Transient
+  private List<CategoryBagEntity> categoryBags = new ArrayList<>();
+
+  @Transient
+  private List<IdentifierBagEntity> identifierBags = new ArrayList<>();
+
+  @Transient
+  private List<BusinessServiceEntity> services = new ArrayList<>();
+
+  public BusinessEntityEntity() {
+    this.businessKey = "uuid:" + UUID.randomUUID();
     this.createdAt = LocalDateTime.now();
   }
 

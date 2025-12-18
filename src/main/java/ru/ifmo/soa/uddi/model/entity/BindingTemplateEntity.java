@@ -16,14 +16,14 @@ import java.util.UUID;
   @Index(name = "idx_binding_service_key", columnList = "service_key"),
   @Index(name = "idx_binding_access_point", columnList = "access_point")
 })
-public class BindingTemplate {
+public class BindingTemplateEntity {
   @Id
   @Column(name = "binding_key", nullable = false, unique = true)
   private String bindingKey;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "service_key", nullable = false)
-  private BusinessService service;
+  private BusinessServiceEntity service;
 
   @Column(name = "description", columnDefinition = "TEXT")
   private String description;
@@ -40,10 +40,10 @@ public class BindingTemplate {
   @Column(name = "updated_at")
   private LocalDateTime updatedAt;
 
-  @OneToMany(mappedBy = "binding", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<TModelInstanceInfo> tModelInstances = new ArrayList<>();
+  @Transient
+  private List<TModelInstanceInfoEntity> tModelInstances = new ArrayList<>();
 
-  public BindingTemplate() {
+  public BindingTemplateEntity() {
     this.bindingKey = "uuid:" + UUID.randomUUID();
     this.createdAt = LocalDateTime.now();
   }

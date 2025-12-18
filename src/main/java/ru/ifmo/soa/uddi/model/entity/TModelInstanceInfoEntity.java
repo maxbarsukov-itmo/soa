@@ -13,13 +13,13 @@ import lombok.Setter;
   @Index(name = "idx_tmodelinst_binding_key", columnList = "binding_key"),
   @Index(name = "idx_tmodelinst_tmodel_key", columnList = "tmodel_key")
 })
-public class TModelInstanceInfo {
+public class TModelInstanceInfoEntity {
   @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
   @ManyToOne
   @JoinColumn(name = "binding_key", nullable = false)
-  private BindingTemplate binding;
+  private BindingTemplateEntity binding;
 
   @Column(name = "tmodel_key", nullable = false, length = 255)
   private String tModelKey;

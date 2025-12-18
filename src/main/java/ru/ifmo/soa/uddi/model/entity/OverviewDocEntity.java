@@ -12,13 +12,13 @@ import lombok.Setter;
 @Table(name = "overview_doc", indexes = {
   @Index(name = "idx_overview_tmodel_key", columnList = "tmodel_key")
 })
-public class OverviewDoc {
+public class OverviewDocEntity {
   @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
   @ManyToOne
   @JoinColumn(name = "tmodel_key", nullable = false)
-  private TModel tModel;
+  private TModelEntity tModel;
 
   @Column(name = "description", columnDefinition = "TEXT")
   private String description;
