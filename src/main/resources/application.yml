@@ -13,6 +13,9 @@ spring:
       hibernate:
         format_sql: true
 
+server:
+  port: 15613
+
 logging:
   level:
     org.springframework.ws: DEBUG

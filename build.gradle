@@ -67,6 +67,17 @@ sourceSets {
   }
 }
 
+bootJar {
+  archiveFileName = 'uddi.jar'
+  mainClass = 'ru.ifmo.soa.uddi.UddiRegistryApplication'
+
+  launchScript()
+}
+
+jar {
+  enabled = false
+}
+
 tasks.named('test') {
   useJUnitPlatform()
 }
